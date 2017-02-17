@@ -414,8 +414,9 @@ function menu_link_weight_node_form_submit($form, &$form_state) {
     return;
   }
 
-  // Return on empty submissions.
-  if (!isset($form_state['values']['menu']['menu_link_weight'])) {
+  // Return on empty submissions or if if 'Provide a menu link' not selected.
+  if (!isset($form_state['values']['menu']['menu_link_weight'])
+    || !$form_state['values']['menu']['enabled']) {
     return;
   }
 
