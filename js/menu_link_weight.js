@@ -7,7 +7,7 @@
   /**
    * Automatically update the current link title in the menu link weight list.
    */
-  Drupal.behaviors.menuLinkWeightAutomaticTitle = {
+  Backdrop.behaviors.menuLinkWeightAutomaticTitle = {
     attach: function (context) {
       $('fieldset.menu-link-form', context).each(function () {
         var $checkbox = $('.form-item-menu-enabled input', this);

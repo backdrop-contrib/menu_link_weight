@@ -8,7 +8,7 @@
 /**
  * Include functionality related to reordering of options by other modules.
  */
-require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'menu_link_weight') . '/menu_link_weight.reorder.inc';
+require_once BACKDROP_ROOT . '/' . backdrop_get_path('module', 'menu_link_weight') . '/menu_link_weight.reorder.inc';
 
 /**
  * Minimum weight of a menu link. In Drupal core this is currently -50.
@@ -58,9 +58,9 @@ function menu_link_weight_form_node_form_alter(&$form, &$form_state) {
   $form['menu']['link']['db_weights'] = array(
     '#tree' => TRUE,
   );
-  $form['#attached']['js'][] = drupal_get_path('module', 'menu_link_weight') . '/js/menu_link_weight.js';
+  $form['#attached']['js'][] = backdrop_get_path('module', 'menu_link_weight') . '/js/menu_link_weight.js';
   if (module_exists('hierarchical_select')) {
-    $form['#attached']['js'][] = drupal_get_path('module', 'menu_link_weight') . '/js/menu_link_weight.hierarchical_select.js';
+    $form['#attached']['js'][] = backdrop_get_path('module', 'menu_link_weight') . '/js/menu_link_weight.hierarchical_select.js';
   }
 
   // Define the AJAX callback for changes in the Parent element.
@@ -485,7 +485,7 @@ function theme_menu_link_weight_reorder_element($variables) {
     $has_tabledrag = TRUE;
     // Before we add our 'weight' column to the row, we need to give the
     // element a custom class so that it can be identified in the
-    // drupal_add_tabledrag call.
+    // backdrop_add_tabledrag call.
     $weight_class = 'menu-link-weight-item-weight';
     $element[$id]['weight']['#attributes']['class'] = array($weight_class);
     // To support the tabledrag behaviour, we need to assign each row of the
@@ -502,19 +502,19 @@ function theme_menu_link_weight_reorder_element($variables) {
 
     // We are now ready to add each element of our $form data to the $rows
     // array, so that they end up as individual table cells when rendered
-    // in the final table.  We run each element through the drupal_render()
+    // in the final table.  We run each element through the backdrop_render()
     // function to generate the final html markup for that element.
     $rows[] = array(
       'data' => array(
-        drupal_render($element[$id]['name']),
-        drupal_render($element[$id]['weight']),
+        backdrop_render($element[$id]['name']),
+        backdrop_render($element[$id]['weight']),
       ),
       'class' => $class,
       'no_striping' => $no_striping,
     );
   }
 
-  // We also need to pass the drupal_add_tabledrag() function an id which will
+  // We also need to pass the backdrop_add_tabledrag() function an id which will
   // be used to identify the <table> element containing our tabledrag form.
   $table_id = 'menu-link-weight-reorder';
 
@@ -525,10 +525,10 @@ function theme_menu_link_weight_reorder_element($variables) {
       'attributes' => array('id' => $table_id),
     ));
 
-  // We now call the drupal_add_tabledrag() function in order to add the
+  // We now call the backdrop_add_tabledrag() function in order to add the
   // tabledrag.js functionality onto our page.
   if (isset($has_tabledrag) && $has_tabledrag) {
-    drupal_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
+    backdrop_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
   }
 
   return $output;
@@ -545,7 +545,7 @@ function menu_link_weight_hierarchical_select_ajax_commands_alter(&$commands, $c
   if (isset($context['form']['menu']['link']['menu_link_weight'])) {
     $commands[] = array(
       'command' => 'menuLinkWeightHierarchicalSelectUpdate',
-      'output' => drupal_render($context['form']['menu']['link']['menu_link_weight']),
+      'output' => backdrop_render($context['form']['menu']['link']['menu_link_weight']),
     );
   }
 }

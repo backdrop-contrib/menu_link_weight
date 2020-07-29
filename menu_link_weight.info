@@ -1,5 +1,5 @@
-core           = "7.x"
+name = "Menu Link Weight"
+description = "Replaces the menu link weight dropdown with a tabledrag widget"
+backdrop = 1.x
+type = module
 dependencies[] = menu
-files[]        = menu_link_weight.test
-description    = "Replaces the menu link weight dropdown with a tabledrag widget"
-name           = "Menu Link Weight"
