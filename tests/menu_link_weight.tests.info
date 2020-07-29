@@ -1,0 +1,5 @@
+[MenuLinkWeightTest]
+name = 'Menu Link Weight'
+description = 'Web tests for Menu Link Weight'
+group = Menu Link Weight
+file = menu_link_weight.test

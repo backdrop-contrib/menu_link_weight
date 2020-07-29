@@ -6,6 +6,16 @@
  */
 
 /**
+ * Implements hook_config_info().
+ */
+function menu_link_weight_test_config_info() {
+  $prefixes['menu_link_weight_test.settings'] = array(
+    'label' => t('Test settings'),
+    'group' => t('Configuration'),
+  );
+}
+
+/**
  * Implements hook_element_info_alter().
  *
  * @see https://drupal.stackexchange.com/questions/49216/how-to-add-a-process-callback-to-a-fieldset-form-element-without-overwriting-th
@@ -22,7 +32,7 @@ function menu_link_weight_test_element_info_alter(&$types) {
  */
 function menu_link_weight_test_element_process($element, &$form_state) {
   // Can be one of "top", "above_{mlid}", "below_{mlid}":
-  $parent_value = variable_get('menu_link_weight_test_parent_value');
-  $form_state['menu_link_weight_relative_position'][$parent_value] = variable_get('menu_link_weight_test_relative_position');
+  $parent_value = config_get('menu_link_weight_test.settings', 'menu_link_weight_test_parent_value');
+  $form_state['menu_link_weight_relative_position'][$parent_value] = config_get('menu_link_weight_test.settings', 'menu_link_weight_test_relative_position');
   return $element;
 }
