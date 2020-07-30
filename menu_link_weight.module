@@ -448,7 +448,6 @@ function theme_menu_link_weight_reorder_element($variables) {
         backdrop_render($element[$id]['weight']),
       ),
       'class' => $class,
-      'no_striping' => TRUE,
     );
   }
 
