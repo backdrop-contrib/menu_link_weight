@@ -142,11 +142,11 @@ class MenuLinkWeightTest extends BackdropWebTestCase {
       'menu[parent]' => 'management:' . $mlid_add_content,
     );
     $this->backdropPostAJAX('node/' . $node->nid . '/edit', $edit, 'menu[parent]');
-    $this->assertText('Change the weight of the links within the Add content menu');
+    $this->assertText('Change the order of links within this menu level by dragging the items up/down.');
 
     // Test graceful degradation.
     $this->backdropPost('node/' . $node->nid . '/edit', $edit, menu_link_weight_get_button_text());
-    $this->assertText('Change the weight of the links within the Add content menu');
+    $this->assertText('Change the order of links within this menu level by dragging the items up/down.');
 
     // Test "editing lock".
     $edit = array(

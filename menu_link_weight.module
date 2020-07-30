@@ -40,15 +40,10 @@ function menu_link_weight_form_node_form_alter(&$form, &$form_state) {
   // Add the Menu Link weight fieldset.
   $form['menu']['link']['menu_link_weight'] = array(
     '#tree' => TRUE,
-    '#type' => 'fieldset',
-    '#collapsible' => FALSE,
-    '#title' => t('Menu link weight'),
+    '#type' => 'container',
     '#theme' => 'menu_link_weight_reorder_element',
-    '#prefix' => '<div id="menu-link-weight-wrapper">',
-    '#suffix' => '</div>',
-    // Tell the fieldset process function to process this field by setting
-    // the #menu_link_weight_process flag to TRUE.
-    '#menu_link_weight_process' => TRUE,
+    '#id' => 'menu-link-weight-wrapper',
+    '#process' => array('form_process_container', 'menu_link_weight_node_element_process'),
   );
 
   // Define the "db_weights" element, which will hold hidden fields with
@@ -83,26 +78,6 @@ function menu_link_weight_form_node_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for menu_overview_form().
- *
- * Adds an anchor tag so we can link to a menu item directly from the node form.
- *
- * @see menu_link_weight_node_element_process
- */
-function menu_link_weight_form_menu_overview_form_alter(&$form, &$form_state) {
-  foreach (element_children($form) as $element) {
-    if (substr($element, 0, 5) == 'mlid:') {
-      $mlid = $form[$element]['#item']['mlid'];
-      // Add an offset of 60 pixels to the anchor tag so it doesn't "headbutt"
-      // the top of the screen.
-      $html = '<span style="display: inline-block; margin-top: -60px; padding-top: 60px;" id="menu-link-weight-mlid-' . $mlid . '"></span>';
-      $form[$element]['title']['#prefix'] = isset($form[$element]['title']['#prefix']) ? $form[$element]['title']['#prefix'] . $html : $html;
-    }
-  }
-}
-
-
-/**
  * Gets the name for the "No-Javascript" button we want to use.
  *
  * @return string
@@ -122,24 +97,9 @@ function menu_link_weight_parent_ajax_callback($form, $form_state) {
 }
 
 /**
- * Implements hook_element_info_alter().
- *
- * @see https://drupal.stackexchange.com/questions/49216/how-to-add-a-process-callback-to-a-fieldset-form-element-without-overwriting-th
- */
-function menu_link_weight_element_info_alter(&$types) {
-  // Set the Menu link weight process function all fieldsets, but check
-  // within the process function whether we are editing a Menu Link Weight
-  // element.
-  $types['fieldset']['#process'][] = 'menu_link_weight_node_element_process';
-}
-
-/**
  * Process callback for the menu link weight element.
  */
 function menu_link_weight_node_element_process($element, &$form_state, &$complete_form) {
-  if (empty($element['#menu_link_weight_process'])) {
-    return $element;
-  }
   $options = array();
 
   // Find out which parent to select after loading (or AJAX reloading) the form.
@@ -151,23 +111,6 @@ function menu_link_weight_node_element_process($element, &$form_state, &$complet
   else {
     return $element;
   }
-
-  // Get the menu title for the parent based on the current menu selection.
-  if ($plid == 0) {
-    $menu = menu_load($menu_name);
-    $parent_menu_link = l($menu['title'], 'admin/structure/menu/manage/' . $menu_name);
-  }
-  else {
-    $link = menu_link_load($plid);
-    $parent_menu_link = l($link['link_title'], 'admin/structure/menu/manage/' . $menu_name, array(
-      'attributes' => array(
-        'target' => '_blank',
-      ),
-      'fragment' => 'menu-link-weight-mlid-' . $plid,
-      'html' => TRUE,
-    ));
-  }
-  $element['#description'] = t('Change the weight of the links within the !parent_menu_link menu by dragging the items up/down.', array('!parent_menu_link' => filter_xss_admin($parent_menu_link)));
 
   // Get the ID for the current menu link.
   $current_mlid = !empty($complete_form['menu']['link']['mlid']['#value']) ? $complete_form['menu']['link']['mlid']['#value'] : NULL;
@@ -491,13 +434,8 @@ function theme_menu_link_weight_reorder_element($variables) {
     // To support the tabledrag behaviour, we need to assign each row of the
     // table a class attribute of 'draggable'.
     $class = array('draggable');
-    $no_striping = FALSE;
     if ($id == 'link_current') {
-      // Make the row which contains the menu link for the node we are editing
-      // highlight, by using the "warning" class.
-      $class[] = 'warning';
       $class[] = 'menu-link-weight-link-current-row';
-      $no_striping = TRUE;
     }
 
     // We are now ready to add each element of our $form data to the $rows
@@ -510,7 +448,7 @@ function theme_menu_link_weight_reorder_element($variables) {
         backdrop_render($element[$id]['weight']),
       ),
       'class' => $class,
-      'no_striping' => $no_striping,
+      'no_striping' => TRUE,
     );
   }
 
@@ -520,9 +458,10 @@ function theme_menu_link_weight_reorder_element($variables) {
 
   // We can render our tabledrag table for output.
   $output = theme('table', array(
-      'header' => array(t('Name'), t('Weight')),
+      'header' => array(t('Item order'), t('Weight')),
       'rows' => $rows,
       'attributes' => array('id' => $table_id),
+      'sticky' => FALSE,
     ));
 
   // We now call the backdrop_add_tabledrag() function in order to add the
@@ -530,6 +469,8 @@ function theme_menu_link_weight_reorder_element($variables) {
   if (isset($has_tabledrag) && $has_tabledrag) {
     backdrop_add_tabledrag($table_id, 'order', 'sibling', $weight_class);
   }
+  $description = t('Change the order of links within this menu level by dragging the items up/down.');
+  $output .= '<div class="form-item"><div class="description">' . $description . '</div></div>';
 
   return $output;
 }
