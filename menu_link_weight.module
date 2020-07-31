@@ -286,16 +286,16 @@ function _menu_link_weight_get_tree($menu_name, $plid) {
   // check.
   $menu_admin = TRUE;
   $tree = menu_build_tree($menu_name, array(
-      'active_trail' => array($plid),
-      'only_active_trail' => FALSE,
-      'min_depth' => $limit,
-      'max_depth' => $limit,
-      'conditions' => array('plid' => $plid),
-      // To prevent core bug: https://www.drupal.org/node/1477608.
-      // We do not want this call to be cached (which is partly done based on
-      // the hash of the parameters), so we put a unique ID in the parameters.
-      'do_not_cache' => uniqid(),
-    ));
+    'active_trail' => array($plid),
+    'only_active_trail' => FALSE,
+    'min_depth' => $limit,
+    'max_depth' => $limit,
+    'conditions' => array('plid' => $plid),
+    // To prevent core bug: https://www.drupal.org/node/1477608.
+    // We do not want this call to be cached (which is partly done based on
+    // the hash of the parameters), so we put a unique ID in the parameters.
+    'do_not_cache' => uniqid(),
+  ));
   $menu_admin = FALSE;
   return $tree;
 }
@@ -457,11 +457,11 @@ function theme_menu_link_weight_reorder_element($variables) {
 
   // We can render our tabledrag table for output.
   $output = theme('table', array(
-      'header' => array(t('Item order'), t('Weight')),
-      'rows' => $rows,
-      'attributes' => array('id' => $table_id),
-      'sticky' => FALSE,
-    ));
+    'header' => array(t('Item order'), t('Weight')),
+    'rows' => $rows,
+    'attributes' => array('id' => $table_id),
+    'sticky' => FALSE,
+  ));
 
   // We now call the backdrop_add_tabledrag() function in order to add the
   // tabledrag.js functionality onto our page.
