@@ -9,14 +9,7 @@
  * Implements hook_install().
  */
 function menu_link_weight_install() {
-  menu_link_weight_update_7000();
-}
-
-/**
- * Make the Menu Link Weight module execute later.
- */
-function menu_link_weight_update_7000() {
-  // Make sure this module always runs after the core Menu module and allows
+  // Make sure this module always runs after the core Menu module and allow
   // other modules to alter menu access before executing.
   db_update('system')
     ->fields(array('weight' => 4))
