@@ -274,8 +274,8 @@ function _menu_link_weight_get_options($menu_name, $plid, $current_mlid, $new_it
  */
 function _menu_link_weight_get_tree($menu_name, $plid) {
   global $menu_admin;
-  if ($plid != 0) {
-    $link = menu_Link_load($plid);
+  if ($plid != '0') {
+    $link = menu_link_load($plid);
     $limit = $link['depth'] + 1;
   }
   else {
