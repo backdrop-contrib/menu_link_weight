@@ -1,7 +1,12 @@
 # Menu Link Weight
 
-This module replaces the standard numeric weight dropdown widget for menu links in the node form
+If you have ever been annoyed by adding a menu item on a node form and then
+you had to go to admin/structure/menu/manage/main-menu to reorder the (sub-)items
+then Menu Link Weight is for you.
+
+This module replaces the standard numeric weight widget for menu links in the node form
 with a tabledrag widget that lists all children for the selected parent.
+Just drag and drop the order you need.
 
 ## Installation
 
